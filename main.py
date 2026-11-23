@@ -1,4 +1,18 @@
 import math
+import time
+
+def fast_pow(a: int, n: int, m: int) -> int:
+    result = 1
+    a = a % m
+
+    while n > 0:
+        if n % 2 == 1:
+            result = (result * a) % m
+
+        a = (a * a) % m
+        n //= 2
+
+    return result
 
 def fermat_test(n, a):
     if n <= 1:
@@ -44,3 +58,28 @@ assert fermat_test(561, 2) == True
 
 
 print("All tests passed!")
+
+
+
+a = 2
+n = 10_000_000
+m = 17
+
+start = time.perf_counter()
+res_fast = fast_pow(a, n, m)
+time_fast = time.perf_counter() - start
+
+start = time.perf_counter()
+res_builtin = pow(a, n, m)
+time_builtin = time.perf_counter() - start
+
+start = time.perf_counter()
+res_naive = (a ** n) % m
+time_naive = time.perf_counter() - start
+
+assert res_fast == res_builtin == res_naive
+
+print(f"result: {res_fast}\n")
+print(f"fast_pow(a, n, m): {time_fast:.6f} sec")
+print(f"pow(a, n, m): {time_builtin:.6f} sec")
+print(f"(a ** n) % m: {time_naive:.6f} sec")
